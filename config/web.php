@@ -47,6 +47,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'ajax' => 'ajax/multipledelete',
+                'urlform' => 'site/urlform',
+                'urltable' => 'urltable/index',
                 '' => 'site/index',
                 '<action>' => 'site/<action>',
             ],

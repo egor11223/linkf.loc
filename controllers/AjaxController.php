@@ -5,7 +5,7 @@ use app\models\Url;
 use yii\web\Controller;
 
 class AjaxController extends Controller{
-    public function actionIndex()
+/*    public function actionIndex()
     {
         if(Yii::$app->request->isAjax){
             $pk = Yii::$app->request->post('row_id');
@@ -19,6 +19,6 @@ class AjaxController extends Controller{
             return 'Бууу!';
         }
 
-    }
+    }*/
 }
 ?>

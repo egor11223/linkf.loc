@@ -12,7 +12,9 @@ use app\models\ContactForm;
 use app\models\UrlForm;
 use yii\web\UploadedFile;
 use yii\helpers\Html;
-use yii\validators\Validator;
+use GuzzleHttp\Client;
+use yii\helpers\Url;
+use Caxy\HtmlDiff\HtmlDiff;
 
 class SiteController extends Controller
 {
@@ -57,6 +59,19 @@ class SiteController extends Controller
             ],
         ];
     }
+    public function actionTestdiff(){
+    }
+    public function actionGeturl()
+    {
+        $client = new Client();
+        $res = $client->request('GET', 'https://amakids.ru/');
+        $body = $res->getBody();
+        $html1 = '<h1>Big dice</h1>';
+        $html2 = '<h5>Big box</h5>';
+        $htmldiff = new HtmlDiff($html1, $html2);
+        $content = $htmldiff->build();
+        return $this->render('geturl', ['content' => $content]);
+    }
     public function actionUrlform(){
         $form = new UrlForm();
         if($form->load(Yii::$app->request->post()) && $form->validate()){
@@ -64,24 +79,22 @@ class SiteController extends Controller
             $type = Html::encode($form->type);
             $interval = Html::encode($form->interval);
             $form->file = UploadedFile::getInstance($form, 'file');
-            $rules = $form->validators;
-            $new_rules = Validator::createValidator($form, ['url', 'file'], [function ($attribute){
-                if(empty($this->url) && empty($this->file)){
-                    $this->addError($attribute, 'Заполните хотя-бы одно поле');
-                }
-            }], ['skipOnEmpty' => false]);
-            $rules->append($new_rules);
-            $form->validate();
+            $date = new \DateTime();
             if(!empty($url)){
-                echo('Выполнено условие если не пусто &nbsp');
                 $url = explode(PHP_EOL, $url);
-                $mess = 'Error!';
-                if($form->file !== ""){
-                    var_dump($form->file);
+                $data = [];
+                foreach ($url as $item){
+                    if(!empty($item)){
+                        $data[] = [
+                            $item,
+                            $interval,
+                            $date->format('Y-m-d H:i:s'),
+                        ];
+                    }
                 }
+                Yii::$app->db->createCommand()->batchInsert('url_info', ['url', 'ckeck_interval', 'create_date'], $data)->execute();
             }
             if(!empty($form->file)){
-                echo('Выполнено условие если не пусто');
                 $txt_url = file_get_contents($form->file->tempName);
                 $txt_url = explode(PHP_EOL, $txt_url);
                 $data = [];
@@ -89,13 +102,14 @@ class SiteController extends Controller
                     $data[] = [
                         $item,
                         $interval,
+                        $date->format('Y-m-d H:i:s'),
                     ];
                 }
-                Yii::$app->db->createCommand()->batchInsert('url_info', ['url', 'ckeck_interval'], $data)->execute();
+                Yii::$app->db->createCommand()->batchInsert('url_info', ['url', 'ckeck_interval', 'create_date'], $data)->execute();
                 print_r($data);
             }
         }
-        return $this->render('urlform', ['form' => $form, 'mess' => $mess]);
+        return $this->render('urlform', ['form' => $form]);
     }
     /**
      * Displays homepage.

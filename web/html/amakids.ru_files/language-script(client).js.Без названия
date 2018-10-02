@@ -1,0 +1,11 @@
+function translateOption(option){let new_option='';$(option).each(function(){let selected=$(this).attr('selected')?'selected':'';if($(this).text().charAt(0)==='{'){try{let txt=JSON.parse($(this).text());new_option+=`<option value="`+$(this).val()+`" `+selected+`>`+txt[current_lang]+`</option>`}catch(e){console.log(e)}}else{new_option+=`<option value="`+$(this).val()+`" `+selected+`>`+$(this).text()+`</option>`}});return new_option}
+function getTranslateJSON(){return fetch(url_json_translate).then((response)=>{if(response.headers.get("content-type")!="application/json"){}
+    return response.json()})}
+function translateData(data){if(data.search!=='NOT_FOUND'){for(let i in data.search){let title=data.search[i].title;if(title.charAt(0)==='{'){try{let parse=JSON.parse(title);let new_title=parse[current_lang];data.search[i].title=new_title}catch(e){console.log(e)}}}}else return data;return data}
+function clearCache(func){let codes=[].slice.call(arguments,1);let pressed={};document.onkeydown=function(e){e=e||window.event;pressed[e.keyCode]=!0;for(var i=0;i<codes.length;i++){if(!pressed[codes[i]]){return}}
+    pressed={};func()};document.onkeyup=function(e){e=e||window.event;delete pressed[e.keyCode]}}
+$(document).ready(function(){localStorage.setItem('all_lang',JSON.stringify(all_lang));$('.seo_field').click(function(){if(all_lang.length>1){$('.seo_field').attr('data-selected',"0");function buildString(){let val='{';let data_lang=all_lang;if(data_lang.length>1){for(let l in data_lang){val+=`"`+data_lang[l].local+`":"",`}
+    val=val.substring(0,val.length-1);val+='}'}else{return!1}
+    return val}
+    $(this).attr("data-selected","1");if(!$(this).val().length){$(this).val(buildString())}
+    $('.seo_field').each(function(){if($(this).val()===buildString()&&$(this).attr("data-selected")==="0"){$(this).val('')}});$("#sendformseo").hover(function(){$('.seo_field').each(function(){if($(this).val()===buildString()){$(this).val('')}})})}})})

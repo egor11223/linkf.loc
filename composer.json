@@ -17,7 +17,10 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0"
+        "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "guzzlehttp/guzzle": "~6.0",
+        "electrolinux/phpquery": "^0.9.6",
+        "caxy/php-htmldiff": "^0.1.7"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

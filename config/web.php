@@ -48,6 +48,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'ajax' => 'ajax/multipledelete',
+                'geturl' => 'site/geturl',
                 'urlform' => 'site/urlform',
                 'urltable' => 'urltable/index',
                 '' => 'site/index',

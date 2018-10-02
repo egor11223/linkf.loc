@@ -17,5 +17,4 @@ use yii\widgets\ActiveForm;
     <?=$f->field($form, 'file')->fileInput()?>
     <?=Html::submitButton('Добавить & Загрузить', ['class' => 'btn btn-primary'])?>
 <?php ActiveForm::end()?>
-<h1>bla</h1>
 <h1><?echo($mess)?></h1>
